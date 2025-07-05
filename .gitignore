@@ -7,6 +7,7 @@
 /EDCB/edcb/Common.ini
 /EDCB/edcb/EpgDataCap_Bon.ini
 /EDCB/edcb/EpgTimerSrv.ini
+/EDCB/edcb/RecName_Macro.so.ini
 /EDCB/edcb/Setting/*
 !/EDCB/edcb/Setting/.gitkeep
 /EDCB/record/*

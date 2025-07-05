@@ -5,8 +5,8 @@ Dockerで構築するMirakurun + EDCB + KonomiTVなTV視聴・録画環境
 ## 技術スタック
 
 - [Mirakurun](https://github.com/Chinachu/Mirakurun)
-- [tsukumijima/libaribb25](https://github.com/tsukumijima/libaribb25)
-- [stz2012/recpt1](https://github.com/stz2012/recpt1)
+- [kazuki0824/recisdb-rs](https://github.com/kazuki0824/recisdb-rs)
+- [tsukumijima/ISDBScanner](https://github.com/tsukumijima/ISDBScanner)
 - [xtne6f/EDCB](https://github.com/xtne6f/EDCB)
 - [EDCB_Material_WebUI](https://github.com/EMWUI/EDCB_Material_WebUI)
 - [BonDriver_LinuxMirakc](https://github.com/matching/BonDriver_LinuxMirakc)
@@ -24,18 +24,59 @@ Dockerで構築するMirakurun + EDCB + KonomiTVなTV視聴・録画環境
 
 ### インストール
 
-Mirakurun用に`mirakurun/conf`ディレクトリ以下にchannels.yml、tuners.ymlを作成してください。
-[ISDBScanner](https://github.com/tsukumijima/ISDBScanner)などで自動生成できます。
+#### recisdb 
 
-EDCB用に`EDCB/edcb`ディレクトリ以下にCommon.ini、EpgDataCap_Bon.ini、EpgTimerSrv.iniを作成してください。
+```bash
+wget https://github.com/kazuki0824/recisdb-rs/releases/download/1.2.3/recisdb_1.2.3-1_amd64.deb
+sudo apt install ./recisdb_1.2.3-1_amd64.deb
+rm ./recisdb_1.2.3-1_amd64.deb
+```
+
+#### ISDBScanner
+
+```bash
+sudo wget https://github.com/tsukumijima/ISDBScanner/releases/download/v1.3.2/isdb-scanner -O /usr/local/bin/isdb-scanner
+sudo chmod +x /usr/local/bin/isdb-scanner
+
+isdb-scanner --exclude-pay-tv ./scanned/
+```
+
+#### Mirakurun
+
+```bash
+cp ./scanned/Mirakurun/tuners.yml ./mirakurun/conf
+cp ./scanned/Mirakurun/channels.yml ./mirakurun/conf
+```
+
+#### EDCB
+
+```bash
+cp ./EDCB/edcb/Common.ini.example ./EDCB/edcb/Common.ini
+cp ./EDCB/edcb/EpgDataCap_Bon.ini.example ./EDCB/edcb/EpgDataCap_Bon.ini
+cp ./EDCB/edcb/EpgTimerSrv.ini.example ./EDCB/edcb/EpgTimerSrv.ini
+cp ./EDCB/edcb/RecName_Macro.so.ini.example ./EDCB/edcb/RecName_Macro.so.ini
+cp ./scanned/EDCB-Wine/*.txt ./EDCB/edcb/Setting
+```
+
 EpgTimerSrv.iniの以下の項目はお使いのチューナーに合わせて変更してください。
 
 ```ini
 [BonDriver_LinuxMirakc.so]
-Count=4     # チューナー数
-GetEpg=1
-EPGCount=2  # EPG取得に使用するチューナー数
+Count=0    ; チューナー数
+GetEpg=0
+EPGCount=0 ; EPG取得に使用するチューナー数
 Priority=0
+
+[BonDriver_LinuxMirakc_T.so] ; 地デジ
+Count=2
+GetEpg=1
+EPGCount=1
+Priority=1
+[BonDriver_LinuxMirakc_S.so] ; BS/CS
+Count=2
+GetEpg=1
+EPGCount=1
+Priority=2
 ```
 
 デフォルトの録画保存先ディレクトリは`EDCB/record`に設定されています。必要に応じてcompose.yamlのedcbサービスのボリューム設定を変更してください。
@@ -46,7 +87,16 @@ Priority=0
         target: "/record"
 ```
 
+#### KonomiTV
+
 KonomiTV用に`KonomiTV`ディレクトリ以下にconfig.yamlを作成してください。
+
+```bash
+cp ./KonomiTV/config.example.yaml ./KonomiTV/config.yaml
+```
+
+
+#### 起動
 
 設定が完了したら、以下のコマンドでDockerイメージをビルドし、コンテナを起動します：
 
@@ -54,15 +104,9 @@ KonomiTV用に`KonomiTV`ディレクトリ以下にconfig.yamlを作成してく
 docker compose up -d
 ```
 
-最初にEDCBチャンネルスキャン用のコンテナが立ち上がります。チャンネルスキャンには3〜4分ほどかかりますので、完了するまで待ってからEDCBとKonomiTVにアクセスしてください。
-
-チャンネルスキャンが必要ない場合は、次のコマンドでスキップできます：
-
-```bash
-docker compose up -d --no-deps mirakurun edcb konomitv
-```
-
 ## 紹介記事
+
+fork元の紹介記事はこちら
 
 [Dockerで構築！ミニPC + PX-W3U4でお手軽自宅録画サーバー](https://zenn.dev/nunawa/articles/ecb9ef2e237532)
 

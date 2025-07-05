@@ -27,28 +27,12 @@ services:
       options:
         max-file: "1"
         max-size: 10m
-
-  edcb_chscan:
-    image: edcb
-    container_name: EDCB_ChScan
-    build:
-      context: ./EDCB
-    depends_on:
-      - mirakurun
-    network_mode: host
-    volumes:
-      - type: bind
-        source: "./EDCB/edcb/Common.ini"
-        target: "/var/local/edcb/Common.ini"
-      - type: bind
-        source: "./EDCB/edcb/EpgDataCap_Bon.ini"
-        target: "/var/local/edcb/EpgDataCap_Bon.ini"
-      - type: bind
-        source: "./EDCB/edcb/EpgTimerSrv.ini"
-        target: "/var/local/edcb/EpgTimerSrv.ini"
-      - type: bind
-        source: "./EDCB/edcb/Setting"
-        target: "/var/local/edcb/Setting"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:40772/api/version || exit 1"]
+      interval: "3s"
+      timeout: "5s"
+      retries: 10
+      start_period: "5s"
 
   edcb:
     image: edcb
@@ -57,9 +41,7 @@ services:
       context: ./EDCB
     depends_on:
       mirakurun:
-        condition: service_started
-      edcb_chscan:
-        condition: service_completed_successfully
+        condition: service_healthy
     restart: always
     network_mode: host
     command: /usr/local/bin/EpgTimerSrv
@@ -77,7 +59,10 @@ services:
         source: "./EDCB/edcb/Setting"
         target: "/var/local/edcb/Setting"
       - type: bind
-        source: "./EDCB/record"
+        source: "./EDCB/edcb/RecName_Macro.so.ini"
+        target: "/var/local/edcb/RecName_Macro.so.ini"
+      - type: bind
+        source: "/mnt/sdb1/raw_videos/raw_videos"
         target: "/record"
 
   konomitv:
@@ -86,8 +71,10 @@ services:
     build:
       context: ./KonomiTV
     depends_on:
-      - mirakurun
-      - edcb
+      mirakurun:
+        condition: service_healthy
+      edcb:
+        condition: service_started
     restart: always
     network_mode: host
     volumes:

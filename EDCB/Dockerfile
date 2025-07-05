@@ -42,9 +42,15 @@ RUN git clone --depth=1 --recurse-submodules \
     https://github.com/matching/BonDriver_LinuxMirakc.git
 WORKDIR /tmp/BonDriver_LinuxMirakc
 RUN make -j "$(nproc)"
-RUN cp BonDriver_LinuxMirakc.so /usr/local/lib/edcb
+RUN cp BonDriver_LinuxMirakc.so /usr/local/lib/edcb/BonDriver_LinuxMirakc.so
+RUN cp BonDriver_LinuxMirakc.so /usr/local/lib/edcb/BonDriver_LinuxMirakc_S.so
+RUN cp BonDriver_LinuxMirakc.so /usr/local/lib/edcb/BonDriver_LinuxMirakc_T.so
 RUN cp BonDriver_LinuxMirakc.so.ini_sample \
     /usr/local/lib/edcb/BonDriver_LinuxMirakc.so.ini
+RUN cp BonDriver_LinuxMirakc.so.ini_sample \
+    /usr/local/lib/edcb/BonDriver_LinuxMirakc_S.so.ini
+RUN cp BonDriver_LinuxMirakc.so.ini_sample \
+    /usr/local/lib/edcb/BonDriver_LinuxMirakc_T.so.ini
 RUN make clean
 
 # デバッグ用に移動しておく

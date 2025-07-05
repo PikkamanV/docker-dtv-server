@@ -1,0 +1,2 @@
+[SET]
+Macro=[$SDYY$$SDMM$$SDDD$-$STHH$$STMM$][$ONID10$][$SID10$][$ZtoH(ServiceName)$]$ZtoH(Title)$.m2ts
