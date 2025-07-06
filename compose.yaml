@@ -28,7 +28,7 @@ services:
         max-file: "1"
         max-size: 10m
     healthcheck:
-      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:40772/api/version || exit 1"]
+      test: ["CMD-SHELL", "/usr/local/bin/healthcheck.sh"]
       interval: "3s"
       timeout: "5s"
       retries: 10
