@@ -55,7 +55,10 @@ cp ./EDCB/edcb/Common.ini.example ./EDCB/edcb/Common.ini
 cp ./EDCB/edcb/EpgDataCap_Bon.ini.example ./EDCB/edcb/EpgDataCap_Bon.ini
 cp ./EDCB/edcb/EpgTimerSrv.ini.example ./EDCB/edcb/EpgTimerSrv.ini
 cp ./EDCB/edcb/RecName_Macro.so.ini.example ./EDCB/edcb/RecName_Macro.so.ini
-cp ./scanned/EDCB-Wine/*.txt ./EDCB/edcb/Setting
+cp ./scanned/EDCB-Wine/BonDriver_mirakc\(BonDriver_mirakc\).ChSet4.txt ./EDCB/edcb/Setting/BonDriver_LinuxMirakc\(LinuxMirakc\).ChSet4.txt
+cp ./scanned/EDCB-Wine/BonDriver_mirakc_S\(BonDriver_mirakc\).ChSet4.txt ./EDCB/edcb/Setting/BonDriver_LinuxMirakc_S\(LinuxMirakc\).ChSet4.txt
+cp ./scanned/EDCB-Wine/BonDriver_mirakc_T\(BonDriver_mirakc\).ChSet4.txt ./EDCB/edcb/Setting/BonDriver_LinuxMirakc_T\(LinuxMirakc\).ChSet4.txt
+cp ./scanned/EDCB-Wine/ChSet5.txt ./EDCB/edcb/Setting/ChSet5.txt
 ```
 
 EpgTimerSrv.iniの以下の項目はお使いのチューナーに合わせて変更してください。
