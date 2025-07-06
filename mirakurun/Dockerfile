@@ -15,4 +15,8 @@ RUN wget https://github.com/kazuki0824/recisdb-rs/releases/download/1.2.3/recisd
 RUN apt install ./recisdb_1.2.3-1_amd64.deb
 RUN rm ./recisdb_1.2.3-1_amd64.deb
 
+# healthcheckスクリプトの配置
+COPY healthcheck.sh /usr/local/bin/healthcheck.sh
+RUN chmod +x /usr/local/bin/healthcheck.sh
+
 WORKDIR /app
